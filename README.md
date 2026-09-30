@@ -1,62 +1,45 @@
-# LNG Tank Cable Vision Inspection Benchmark
+# LNG Tank Cable Inspection Reproducibility Code
 
-This repository contains reproducibility code for the manuscript:
+This repository provides public reproducibility code for the LNG tank cable vision inspection benchmark. The code is intended to reproduce the analysis pipeline; it does not redistribute the AI-Hub image dataset, labels, checkpoints, or generated results.
 
-**Annotation-Budget-Aware Vision-Based Inspection of LNG Tank Cables: A Duplicate-Aware and Calibration-Controlled Benchmark of Supervised and Normal-Only Anomaly Detection**
-
-The code is intended to reproduce the benchmark protocol, not to redistribute the AI-Hub image data. Users must obtain the original dataset according to the dataset provider's license.
-
-## What this code reproduces
-
-- Cable-only dataset preparation from the source archives
-- Duplicate and near-duplicate audit
-- Group-safe train/calibration/test splits
-- Calibration-only threshold selection and held-out test evaluation
-- Supervised baselines
-- Normal-only anomaly baselines
-- Label-budget and fine label-count crossover experiments
-- Final tables and figures used in the manuscript
-- Grad-CAM shortcut sanity-check examples
-
-## Repository structure
+## Files
 
 ```text
-lng_cable_inspection_reproducibility.ipynb  # Main reproducibility notebook
-requirements.txt                            # Python dependencies for Colab/local use
+lng_cable_inspection.ipynb  # Colab-oriented reproducibility notebook
+lng_cable_inspection.py     # Python script exported from the notebook
+requirements.txt                            # Package list
 README.md                                   # This file
-.gitignore                                  # Excludes data, checkpoints, and generated outputs
+.gitignore                                  # Excludes data and generated artifacts
 ```
 
-## Data
+## Main analysis components
 
-Place the dataset archives under a local or Google Drive directory and update the paths in the first notebook cell:
+- Cable-only dataset preparation from source archives
+- Dataset audit and duplicate/near-duplicate grouping
+- Group-safe train/calibration/test splitting
+- Calibration-only threshold selection and held-out test evaluation
+- Supervised image classification baselines
+- Normal-only anomaly detection baselines
+- Abnormal training-label budget experiments
+- Fine label-count crossover experiments
+- Normal-only threshold variants
+- Grad-CAM qualitative shortcut checks
+- Result tables and figures from saved prediction artifacts
+
+## Data setup
+
+Update the path configuration near the top of the notebook or script:
 
 ```python
-PROJECT_ROOT = Path("/content/drive/MyDrive/LNG_Abnormal/revision_experiments")
-GDRIVE_DATA_ROOT = Path("/content/drive/MyDrive/LNG_Abnormal")
-LOCAL_DATASET_PATH = Path("/content/cable_dataset")
+PROJECT_ROOT = Path('/content/drive/MyDrive/LNG_Abnormal/revision_experiments')
+GDRIVE_DATA_ROOT = Path('/content/drive/MyDrive/LNG_Abnormal')
+LOCAL_DATASET_PATH = Path('/content/cable_dataset')
 ```
 
-The repository intentionally does not include raw images, labels, checkpoints, or generated results.
+The default paths assume Google Colab with Google Drive mounted. Users must obtain the source dataset independently and follow the dataset provider's license.
 
-## Recommended execution order
+## Running the analysis
 
-1. Run **00. Environment and Paths**.
-2. Run **01. Dataset Preparation** after setting the dataset archive paths.
-3. Run the audit and split sections.
-4. Run protocol-v2 supervised and anomaly baselines.
-5. Run label-budget and fine label-count experiments as compute allows.
-6. Generate final tables and figures.
+Start with the notebook in Colab. Load the function sections first, then run the execution examples selectively. Long-running experiments use `overwrite=False` by default and skip completed artifacts when the required files already exist.
 
-Long-running cells are resume-safe when `overwrite=False` and the required artifacts already exist.
-
-## Reproducibility notes
-
-- Operating thresholds are selected only on the calibration split and then frozen before test evaluation.
-- Duplicate/near-duplicate groups are kept within a single split.
-- The label-budget experiments vary abnormal training labels while retaining all normal training samples.
-- Normal-only anomaly detectors are reported separately for labeled calibration and normal-only threshold variants.
-
-## Citation
-
-If this code supports your work, please cite the corresponding manuscript after publication.
+The Python file is provided for review, version control, and advanced users who prefer script-based execution.
